@@ -29,3 +29,11 @@ img {
   max-width: 100%;
   display: block;
 }
+
+a.navy {
+  font-family: 'Indie Flower', cursive;
+}
+
+h1.blocky {
+  font-family: 'BioRhyme', serif;
+}
