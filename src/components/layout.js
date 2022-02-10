@@ -1,10 +1,9 @@
 import Head from 'next/head'
 import Image from 'next/image'
-import styles from '../../styles/layout.module.css'
-import Link from 'next/link'
-import { Fragment } from 'react'
+import { ethers } from "ethers";
 import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { MenuIcon, XIcon } from '@heroicons/react/outline'
+import React, {useEffect, useState } from 'react';
 
 const user = {
   name: 'Tom Cook',
@@ -20,21 +19,103 @@ const navigation = [
   { name: 'Faq', href: '#faq', current: false },
   { name: 'Mint', href: '/mint', current: false },
 ]
-const userNavigation = [
-  { name: 'Your Profile', href: '#' },
-  { name: 'Settings', href: '#' },
-  { name: 'Sign out', href: '#' },
-]
+
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
 
+
+
+
+
 const name = 'Frank'
 export const siteTitle = 'Demo NFT Website'
 
+
 export default function Layout({ children, home }) {
+  const [currentAccount, setCurrentAccount] = useState("");
+  
+  const checkIfWalletIsConnected = async () => {
+    
+    const { ethereum } = window;
+  
+    if(!ethereum) {
+      console.log("No wallet detected");
+      setCurrentAccount("");
+      return;
+    } else {
+      console.log("Ethereum Obj:", ethereum);
+    }
+  
+    let chainId = await ethereum.request({ method: 'eth_chainId' });
+    console.log("Connected to chain " + chainId);
+  
+    // String, hex code of the chainId of the Rinkebey test network
+    const rinkebyChainId = "0x4"; 
+    if (chainId !== rinkebyChainId) {
+      //alert("You are not connected to the Rinkeby Test Network!");
+      setCurrentAccount("");
+      return;
+    }
+  
+    const accounts = await ethereum.request({ method: 'eth_accounts'});
+  
+    console.log(accounts);
+    /* 
+    * Check for multiple accounts
+    */
+    if(accounts.length !== 0) {
+      const account = accounts[0];
+      console.log('Found authorized account: ', account);
+      setCurrentAccount(account);
+    } else {
+      console.log("No authorized account found");
+    }
+  
+  }
+
+  const connectWallet = async () => {
+    console.log('TRYING to CONNECT')
+    try {
+      const { ethereum } = window;
+
+      if (!ethereum) {
+        alert("Get MetaMask!");
+        return;
+      }
+
+      let chainId = await ethereum.request({ method: 'eth_chainId' });
+      console.log("Connected to chain " + chainId);
+
+      // String, hex code of the chainId of the Rinkebey test network
+      const rinkebyChainId = "0x4"; 
+      if (chainId !== rinkebyChainId) {
+        setCurrentAccount("");
+        return;
+      }
+
+      /*
+      * Fancy method to request access to account.
+      */
+      const accounts = await ethereum.request({ method: "eth_requestAccounts" });
+
+      /*
+      * This should print out public address once we authorize Metamask.
+      */
+      console.log("Connected", accounts[0]);
+      setCurrentAccount(accounts[0]); 
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  
+  useEffect(()=> {
+    setCurrentAccount("");
+    checkIfWalletIsConnected();
+  }, [])
+
   return (
     <div className="min-h-full">
         <Head>
@@ -85,44 +166,9 @@ export default function Layout({ children, home }) {
                     </div>
                   </div>
                   <div className="hidden sm:ml-6 sm:flex sm:items-center">
-                    
-
-                    {/* Profile dropdown */}
-                    <Menu as="div" className="ml-3 relative">
-                      <div>
-                        <Menu.Button className="max-w-lg px-4 py-2 bg-teal-600 flex items-center font-semibold text-lg text-black rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-800">
-                          <span className="sr-only">Open menu</span>
-                          Connect Wallet
-                        </Menu.Button>
-                      </div>
-                      <Transition
-                        as={Fragment}
-                        enter="transition ease-out duration-200"
-                        enterFrom="transform opacity-0 scale-95"
-                        enterTo="transform opacity-100 scale-100"
-                        leave="transition ease-in duration-75"
-                        leaveFrom="transform opacity-100 scale-100"
-                        leaveTo="transform opacity-0 scale-95"
-                      >
-                        <Menu.Items className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
-                          {userNavigation.map((item) => (
-                            <Menu.Item key={item.name}>
-                              {({ active }) => (
-                                <a
-                                  href={item.href}
-                                  className={classNames(
-                                    active ? 'bg-gray-100' : 'indie ',
-                                    'block px-4 py-2 text-sm text-gray-700'
-                                  )}
-                                >
-                                  {item.name}
-                                </a>
-                              )}
-                            </Menu.Item>
-                          ))}
-                        </Menu.Items>
-                      </Transition>
-                    </Menu>
+                    <button onClick={connectWallet} className="max-w-lg px-4 py-2 bg-teal-600 flex items-center font-semibold text-lg text-black rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-800">
+                      {currentAccount === "" ? "Connect Wallet" : currentAccount.substring(0,8)+'...'}
+                    </button>
                   </div>
                   <div className="-mr-2 flex items-center sm:hidden">
                     {/* Mobile menu button */}
@@ -163,21 +209,10 @@ export default function Layout({ children, home }) {
                       <Image className="h-10 w-10 rounded-full" src={user.imageUrl} alt=""  width={20} height={20} />
                     </div>
                     <div className="ml-3">
-                      <div className="text-base font-medium text-gray-800">{user.name}</div>
-                      <div className="text-sm font-medium text-gray-500">{user.email}</div>
+                      <button onClick={connectWallet} className="max-w-lg px-4 py-2 bg-teal-600 flex items-center font-semibold text-lg text-black rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-800">
+                        {currentAccount === "" ? "Connect Wallet" : currentAccount.substring(0,8)+'...'}
+                      </button>
                     </div>
-                  </div>
-                  <div className="mt-3 space-y-1">
-                    {userNavigation.map((item) => (
-                      <Disclosure.Button
-                        key={item.name}
-                        as="a"
-                        href={item.href}
-                        className="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100"
-                      >
-                        {item.name}
-                      </Disclosure.Button>
-                    ))}
                   </div>
                 </div>
               </Disclosure.Panel>
@@ -189,13 +224,6 @@ export default function Layout({ children, home }) {
           <main>
             {children}
           </main>
-          {!home && (
-            <div className={styles.backToHome}>
-              <Link href="/">
-                <a>← Back to home</a>
-              </Link>
-            </div>
-          )}
         </div>
       </div>
   )

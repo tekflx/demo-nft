@@ -2,13 +2,11 @@ import Head from 'next/head'
 import Layout, { siteTitle } from '../components/layout'
 import Image from 'next/image'
 import utilStyles from '../../styles/utils.module.css'
-import { getSortedPostsData } from '../lib/posts'
 import {  TagIcon, UserGroupIcon, PhotographIcon, CurrencyDollarIcon, EyeIcon } from '@heroicons/react/solid'
 import { Disclosure } from '@headlessui/react'
 import { ChevronDownIcon } from '@heroicons/react/outline'
 
 import Link from 'next/link'
-import Date from '../components/date'
 
 const faqs = [
   {
@@ -127,16 +125,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-export async function getStaticProps() {
-  const allPostsData = getSortedPostsData()
-  return {
-    props: {
-      allPostsData
-    }
-  }
-}
-
-export default function Home({allPostsData}) {
+export default function Home() {
   return (
     <Layout home>
       <Head>
@@ -353,12 +342,14 @@ export default function Home({allPostsData}) {
               Don{'\''}t miss your chance
               </p>
               <p className='py-4 '>
-                <button
-                  type="button"
-                  className="inline-flex items-center px-10 py-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gray-500 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                >
-                  <span className="px-4 indie text-4xl">Mint</span>
-                </button>
+                <Link href="/mint" passHref>
+                  <button
+                    type="button"
+                    className="inline-flex items-center px-10 py-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gray-500 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  >
+                    <span className="px-4 indie text-4xl">Mint</span>
+                  </button>
+                </Link>
               </p>
             </div>
           </div>
