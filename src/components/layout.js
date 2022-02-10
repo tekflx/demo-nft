@@ -10,13 +10,15 @@ const user = {
   name: 'Tom Cook',
   email: 'tom@example.com',
   imageUrl:
-    'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+    '/images/tim.jpeg',
 }
 const navigation = [
   { name: 'Home', href: '#', current: true },
+  { name: 'Collection', href: '#collection', current: false },
   { name: 'Roadmap', href: '#roadmap', current: false },
   { name: 'Team', href: '#team', current: false },
   { name: 'Faq', href: '#faq', current: false },
+  { name: 'Mint', href: '/mint', current: false },
 ]
 const userNavigation = [
   { name: 'Your Profile', href: '#' },
@@ -37,9 +39,6 @@ export default function Layout({ children, home }) {
     <div className="min-h-full">
         <Head>
         <link rel="icon" href="/favicon.ico" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin />
-        <link href="https://fonts.googleapis.com/css2?family=BioRhyme&family=Indie+Flower&display=swap" rel="stylesheet" />
         <meta
           name="description"
           content="A demo NFT project site for perspective clients"
@@ -74,9 +73,9 @@ export default function Layout({ children, home }) {
                           href={item.href}
                           className={classNames(
                             item.current
-                              ? 'navy border-teal-600 text-gray-900'
-                              : 'navy border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700',
-                            'navy inline-flex items-center px-1 pt-1 border-b-2 text-xl font-medium'
+                              ? 'indie border-teal-600 text-gray-900'
+                              : 'indie border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700',
+                            'indie inline-flex items-center px-1 pt-1 border-b-2 text-xl font-medium'
                           )}
                           aria-current={item.current ? 'page' : undefined}
                         >
@@ -91,9 +90,9 @@ export default function Layout({ children, home }) {
                     {/* Profile dropdown */}
                     <Menu as="div" className="ml-3 relative">
                       <div>
-                        <Menu.Button className="max-w-xs bg-white flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                          <span className="sr-only">Open user menu</span>
-                          <img className="h-8 w-8 rounded-full" src={user.imageUrl} alt="" />
+                        <Menu.Button className="max-w-lg px-4 py-2 bg-teal-600 flex items-center font-semibold text-lg text-black rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-800">
+                          <span className="sr-only">Open menu</span>
+                          Connect Wallet
                         </Menu.Button>
                       </div>
                       <Transition
@@ -112,7 +111,7 @@ export default function Layout({ children, home }) {
                                 <a
                                   href={item.href}
                                   className={classNames(
-                                    active ? 'bg-gray-100' : 'navy ',
+                                    active ? 'bg-gray-100' : 'indie ',
                                     'block px-4 py-2 text-sm text-gray-700'
                                   )}
                                 >
@@ -161,7 +160,7 @@ export default function Layout({ children, home }) {
                 <div className="pt-4 pb-3 border-t border-gray-200">
                   <div className="flex items-center px-4">
                     <div className="flex-shrink-0">
-                      <img className="h-10 w-10 rounded-full" src={user.imageUrl} alt="" />
+                      <Image className="h-10 w-10 rounded-full" src={user.imageUrl} alt=""  width={20} height={20} />
                     </div>
                     <div className="ml-3">
                       <div className="text-base font-medium text-gray-800">{user.name}</div>
@@ -187,15 +186,8 @@ export default function Layout({ children, home }) {
         </Disclosure>
 
         <div className="py-10">
-          <header>
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <h1 className="text-3xl font-bold leading-tight text-gray-900">Dashboard</h1>
-            </div>
-          </header>
           <main>
-            <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
             {children}
-            </div>
           </main>
           {!home && (
             <div className={styles.backToHome}>

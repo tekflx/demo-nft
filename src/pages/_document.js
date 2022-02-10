@@ -10,10 +10,9 @@ class MyDocument extends Document {
         return (
             <Html className="h-full">
                 <Head>
-                    <link
-                        href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap"
-                        rel="stylesheet"
-                    />
+                    <link rel="preconnect" href="https://fonts.googleapis.com" />
+                    <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin />
+                    <link href="https://fonts.googleapis.com/css2?family=BioRhyme&family=Indie+Flower&display=swap" rel="stylesheet" />
                 </Head>
                 <body className="antialiased h-full">
                     <Main />
